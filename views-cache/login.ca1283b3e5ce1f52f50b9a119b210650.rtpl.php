@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php if(!class_exists('Rain\Tpl')){exit;}?><!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -28,11 +28,11 @@
     <p class="login-box-msg">Somente Pessoas Autorizadas</p>
 
 
-     {if="$error != ''"}
+     <?php if( $error != '' ){ ?>
                 <div class="alert alert-danger">
-                    {$error}
+                    <?php echo htmlspecialchars( $error, ENT_COMPAT, 'UTF-8', FALSE ); ?>
                 </div>
-                {/if}
+                <?php } ?>
 
     <form action="/admin/login" method="post">
       <div class="form-group has-feedback">

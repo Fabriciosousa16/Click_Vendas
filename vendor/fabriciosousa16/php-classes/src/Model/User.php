@@ -179,8 +179,115 @@ class User extends Model{
 
 	}
 
-	public function setPassword($password)
-	{
+
+	public static function getForgot($email, $inadmin = true){
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+			SELECT *
+			FROM tb_persons a
+			INNER JOIN tb_users b USING(idperson)
+			WHERE a.desemail = :email;
+		", array(
+			":email"=>$email
+		));
+
+		if (count($results) === 0){
+			throw new \Exception("Não foi possível recuperar a senha.");
+			
+		}
+		else {
+
+			$data = $results[0];
+
+			$results2 = $sql->select("CALL sp_userspasswordsrecoveries_create(:iduser, :desip)", array(
+				":iduser"=>$data["iduser"],
+				":desip"=>$_SERVER["REMOTE_ADDR"]
+			));
+
+			if (count($results2) === 0){
+
+				throw new \Exception("Não foi possível recuperar a senha");
+
+			}
+			else{
+
+				$dataRecovery = $results2[0];
+
+				$code = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, User::SECRET, $dataRecovery["idrecovery"], MCRYPT_MODE_ECB));
+
+				if ($inadmin === true) {
+					
+					$link = "http://www.clickvendas.com.br/admin/forgot/reset?code=$code";
+
+				} else {
+
+					$link = "http://www.clickvendas.com.br/forgot/reset?code=$code";
+
+				}
+
+
+				$mailer = new Mailer($data["desemail"], $data["desperson"], "Redefinir Senha  Click Vendas", "forgot", array(
+					"name"=>$data["desperson"],
+					"link"=>$link
+				));
+
+				$mailer->send();
+
+				return $data;
+
+			}
+
+
+		}
+
+	}
+
+	public static function validForgotDecrypt($code){
+
+		$idrecovery = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, User::SECRET, base64_decode($code), MCRYPT_MODE_ECB);
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+			SELECT * 
+			FROM tb_userspasswordsrecoveries a
+			INNER JOIN tb_users b USING(iduser)
+			INNER JOIN tb_persons c USING(idperson)
+			WHERE 
+				a.idrecovery = :idrecovery
+			    AND
+			    a.dtrecovery IS NULL
+			    AND
+			    DATE_ADD(a.dtregister, INTERVAL 1 HOUR) >= NOW();
+		", array(
+			":idrecovery"=>$idrecovery
+		));
+
+		if (count($results) === 0){
+			throw new \Exception("Não foi possível recuperar a senha.");
+		}
+		else{
+
+			return $results[0];
+
+		}
+
+	}
+
+	public static function setFogotUsed($idrecovery){
+
+		$sql = new Sql();
+
+		$sql->query("UPDATE tb_userspasswordsrecoveries SET dtrecovery = NOW() WHERE idrecovery = :idrecovery", array(
+			":idrecovery"=>$idrecovery
+		));
+
+	}
+
+
+	public function setPassword($password){
 
 		$sql = new Sql();
 
@@ -191,15 +298,13 @@ class User extends Model{
 
 	}
 
-	public static function setError($msg)
-	{
+	public static function setError($msg){
 
 		$_SESSION[User::ERROR] = $msg;
 
 	}
 
-	public static function getError()
-	{
+	public static function getError(){
 
 		$msg = (isset($_SESSION[User::ERROR]) && $_SESSION[User::ERROR]) ? $_SESSION[User::ERROR] : '';
 
@@ -209,22 +314,19 @@ class User extends Model{
 
 	}
 
-	public static function clearError()
-	{
+	public static function clearError(){
 
 		$_SESSION[User::ERROR] = NULL;
 
 	}
 
-	public static function setSuccess($msg)
-	{
+	public static function setSuccess($msg)	{
 
 		$_SESSION[User::SUCCESS] = $msg;
 
 	}
 
-	public static function getSuccess()
-	{
+	public static function getSuccess(){
 
 		$msg = (isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]) ? $_SESSION[User::SUCCESS] : '';
 
@@ -234,8 +336,7 @@ class User extends Model{
 
 	}
 
-	public static function clearSuccess()
-	{
+	public static function clearSuccess(){
 
 		$_SESSION[User::SUCCESS] = NULL;
 
