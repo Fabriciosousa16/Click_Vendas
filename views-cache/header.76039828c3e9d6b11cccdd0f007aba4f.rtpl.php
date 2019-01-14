@@ -40,7 +40,7 @@
                         </li>
                                    
                             <li><a href="#"><i class="fa fa-user"></i><strong> Minha Conta</strong></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i> <strong>Meu Carrinho</strong></a></li>
+                            <li><a href="/cart"><i class="fa fa-shopping-cart"></i> <strong>Meu Carrinho</strong></a></li>
                             <li><a href="#"><i class="fa fa-lock"></i><strong> Login</strong></a></li>
                             
                       </ul>
@@ -73,7 +73,7 @@
                 
                 <div class="col-sm-6">
                     <div class="shopping-item">
-                        <a href="#"><strong>Carrinho - </strong><span class="cart-amunt"></span> <i class="fa fa-shopping-cart"> <strong>R$ 0,00 </strong></i> <span class="product-count">0</span></a>
+                        <a href="\cart"><strong>Carrinho - </strong><span class="cart-amunt"></span> <i class="fa fa-shopping-cart"> <strong>R$ <?php echo getCartVlSubTotal(); ?> </strong></i> <span class="product-count"><?php echo getCartNrQtd(); ?></span></a>
                     </div>
                 </div>
             </div>

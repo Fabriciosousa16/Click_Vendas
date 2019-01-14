@@ -65,7 +65,6 @@ $app->get("/products/:desurl", function($desurl){
 
 });
 
-//Inicio Commit Carinho
 $app->get("/cart", function(){
 
 	$cart = Cart::getFromSession();
@@ -133,7 +132,5 @@ $app->get("/cart/:idproduct/remove", function($idproduct){
 	exit;
 
 });
-//Fim Commit
-
 
 ?>
