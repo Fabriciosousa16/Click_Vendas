@@ -99,9 +99,13 @@ class User extends Model{
 
 			if ($inadmin) {
 				header("Location: /admin/login");
-				exit;
-			} 
+			} else {
+				header("Location: /login");
+			}
+			exit;
+
 		}
+
 	}
 
 	public static function logout(){

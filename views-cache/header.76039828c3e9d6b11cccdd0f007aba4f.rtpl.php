@@ -39,9 +39,15 @@
                           </ul>
                         </li>
                                    
-                            <li><a href="#"><i class="fa fa-user"></i><strong> Minha Conta</strong></a></li>
+                            <li><a href="/profile"><i class="fa fa-user"></i><strong> Minha Conta</strong></a></li>
                             <li><a href="/cart"><i class="fa fa-shopping-cart"></i> <strong>Meu Carrinho</strong></a></li>
-                            <li><a href="#"><i class="fa fa-lock"></i><strong> Login</strong></a></li>
+                            <?php if( checkLogin(false) ){ ?>
+                            <li><a href="/profile"><i class="fa fa-user"></i> <?php echo getUserName(); ?></a></li>
+                            <li><a href="/logout"><i class="fa fa-close"></i><strong> Sair </strong></a></li>
+                            <?php }else{ ?>
+                            <li><a href="/login"><i class="fa fa-lock"></i><strong> Login</strong></a></li>
+                            <?php } ?>
+                            
                             
                       </ul>
                     </div>

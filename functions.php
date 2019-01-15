@@ -1,6 +1,7 @@
 <?php 
 
 use \Click\Model\Cart;
+use \Click\Model\User;
 
 function formatPrice($vlprice){
 
@@ -10,7 +11,19 @@ function formatPrice($vlprice){
 
 }
 
-// Inicio Commit
+function checkLogin($inadmin = true){
+
+	return User::checkLogin($inadmin);
+
+}
+
+function getUserName(){
+
+	$user = User::getFromSession();
+
+	return $user->getdesperson();
+
+}
 
 function getCartNrQtd(){
 
@@ -32,6 +45,5 @@ function getCartVlSubTotal(){
 
 }
 
-//Fim Commit
 
  ?>
