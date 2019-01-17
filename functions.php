@@ -17,6 +17,12 @@ function checkLogin($inadmin = true){
 
 }
 
+function formatDate($date){
+
+	return date('d/m/Y', strtotime($date));
+
+}
+
 function getUserName(){
 
 	$user = User::getFromSession();
